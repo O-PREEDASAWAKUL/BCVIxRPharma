@@ -1,0 +1,591 @@
+---
+title: "{BayesCVI}"
+subtitle: A Bayesian cluster validity index with medical applications
+author: "N. Wiroonsri and O. Preedasawakul"
+institute: "King Mongkut's University of Technology Thonburi"
+format:
+  revealjs:
+    footer: "R/Pharma APAC 2024"
+    slide-number: true
+    transition: slide
+    background-transition: zoom
+    theme: 
+      - default
+      - style.css
+incremental: true
+title-slide-attributes: 
+  data-background-image: logo.png
+  data-background-size: 20%
+  data-background-position: 2% 2%
+---
+
+
+```{r, include = FALSE}
+#| label: libraries
+library(BayesCVI)
+library(UniversalCVI)
+library(ggplot2)
+library(dplyr)
+library(paletteer)
+library(factoextra)
+library(jpeg)
+library(e1071)
+library(stringr)
+library(knitr)
+library(tidyr)
+```
+
+```{r, include = FALSE}
+data = read.csv("clean_dat.csv")[,-c(1,3,5,6)]
+data[data$RXDDAYS==99999,"RXDDAYS"] = 0
+```
+
+##  {.smaller}
+
+**Objective** <br> Learn prescribed drugs patterns through clustering
+
+**Why it matters**
+
+::: columns
+::: {.column width="50%"}
+Personalized medicine ![](IMG/per_med.png){width="300" fig-align="center"} <br>
+
+Ref: [Figure 1](https://www.flaticon.com/free-icon/personalized_6283312)
+:::
+
+::: {.column .center width="50%"}
+Drug development ![](IMG/dev_drug.png){width="300" fig-align="center"} <br>
+
+Ref: [Figure 2](https://www.freepik.com/icon/analysis_5945018)
+:::
+:::
+
+## What we will cover today {.transition}
+
+::: incremental
+-   Background
+-   Motivation
+-   A Bayesian cluster validity index
+-   Introduction to the `BayesCVI` package
+-   Conclusion
+:::
+
+## Public health issue
+
+[Diabetes](https://www.who.int/health-topics/diabetes#tab=tab_1) is a chronic, metabolic disease characterized by elevated levels of blood glucose (or blood sugar), which leads over time to serious damage to the heart, blood vessels, eyes, kidneys and nerves.
+
+![](IMG/diabetes_complications.png){width="400" fig-align="center"}
+
+## Diabetes
+
+::: columns
+::: {.column width="50%"}
+Diabetes is a global health crisis that has seen a dramatic rise in recent years. According to [World Health Organization](https://www.who.int/news-room/fact-sheets/detail/the-top-10-causes-of-death) in 2021, it ranked among the top 10 causes of death worldwide, with a staggering 95% increase since 2000.
+:::
+
+::: {.column width="50%"}
+![](IMG/top10_cause.png){height="600" fig-align="center"}
+:::
+:::
+
+## Data overview {.scrollable .smaller .left}
+
+National Health and Nutrition Examination Survey (NHANES) datasets from 2013-2014 Source: [National Health and Nutrition Examination Survey](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2013)
+
+Information: 207 diabetes patients, including 15 variables.
+
+```{r, echo=FALSE}
+kable(data |> head(2))
+```
+
+<br> Medications
+
+| **Variable**  | **Description**                                          |
+|---------------|----------------------------------------------------------|
+| RXDDRUG       | Generic drug name                                        |
+| RXDDAYS       | For how long have you been using or taking PRODUCT NAME? |
+
+<br> Laboratory results
+
+| **Variable** | **Description**                |
+|--------------|--------------------------------|
+| LBXIN        | Insulin (uU/mL)                |
+| LBXGH        | Glycohemoglobin (%)            |
+| LBXTR        | Triglyceride (mg/dL)           |
+| LBDLDL       | LDL-cholesterol (mg/dL)        |
+| LBDHDD       | Direct HDL-Cholesterol (mg/dL) |
+| LBXTC        | Total Cholesterol (mg/dL)      |
+| URXUMA       | Albumin, urine (ug/mL)         |
+
+<br> Medical examinations
+
+| **Variable**  | **Description**                                   |
+|---------------|---------------------------------------------------|
+| BPXSY1        | Systolic: Blood pressure (first reading) (mm Hg)  |
+| BPXDI1        | Diastolic: Blood pressure (first reading) (mm Hg) |
+| BMXBMI        | Body Mass Index (kg/m²)                           |
+| BMXWAIST      | Waist Circumference (cm)                          |
+
+<br>\
+Demographics
+
+| **Variable** | **Description**                                          |
+|--------------|----------------------------------------------------------|
+| RIDAGEYR     | Age in years of the participant at the time of screening |
+| RIAGENDR     | Gender of the participant                                |
+
+## Classes of diabetic drugs in this data {.scrollable}
+
+```{r drug, echo=FALSE}
+# Group drug
+insulin = data |> filter(str_detect(RXDDRUG, "INSULIN")) |> select(RXDDRUG) |> unique() |> as.vector()
+suf = c("GLIPIZIDE","GLIMEPIRIDE","GLYBURIDE","CHLORPROPAMIDE","GLIPIZIDE; METFORMIN","GLYBURIDE; METFORMIN")
+Biguanides = c("METFORMIN","METFORMIN; SITAGLIPTIN","METFORMIN; SAXAGLIPTIN")
+DPP4 = c("LINAGLIPTIN; METFORMIN","SITAGLIPTIN","LINAGLIPTIN")
+alpha = c("ACARBOSE")
+thia = c("METFORMIN; PIOGLITAZONE")
+GLP1 = c("EXENATIDE","LIRAGLUTIDE")
+
+data = data|> 
+  mutate(Group_Drug = case_when(
+    str_detect(RXDDRUG, "INSULIN") ~ "Insulin",
+    RXDDRUG %in% suf ~ "Sulfonamides, urea derivatives",
+    RXDDRUG %in% Biguanides ~ "Biguanides",
+    RXDDRUG %in% DPP4 ~ "Dipeptidyl peptidase-4 (DPP-4) inhibitors",
+    RXDDRUG %in% alpha ~ "Alpha-glucosidase inhibitors",
+    RXDDRUG %in% thia ~ "Thiazolidinediones",
+    RXDDRUG %in% GLP1 ~ "Glucagon-like peptide-1 (GLP-1) ",
+    TRUE ~ "Others"
+  ))
+```
+
+![](IMG/classdrug.png){width="800" fig-align="center"}
+
+## Background {.smaller}
+
+**Cluster analysis (CA)** is an unsupervised learning tool in machine learning that is widely used in various areas.
+
+![](IMG/patient_clust.jpg){width="500" fig-align="center"}
+
+The aim is to identify natural groupings within a dataset that are not initially apparent and without prior knowledge of the groups. <br>
+
+::: f70
+Ref: [Figure](https://www.discoverdatascience.org/articles/breaking-down-the-top-data-science-algorithms-methods/)
+:::
+
+## Clustering algorithms
+
+![](IMG/clus.algorithm.png){width="400" fig-align="center"}
+
+## Determining the number of clusters
+
+Elbow method <br>
+
+![](IMG/elbow.jpeg){width="900" fig-align="center"}
+
+## Determining the number of clusters {.scrollable .smaller}
+
+**Cluster Validity index (CVI)**
+
+::: columns
+::: {.column width="40%"}
+::: nonincremental
+**Hard:**
+
+-   Dunn’s Index 1973
+-   Calinski-Harabasz 1974
+-   Davies-Bouldin’s index 1979
+-   Point biserial correlation 1980
+-   Silhouette coefficient (Rousseeuw \[1987\], Sarle \[1991\])
+-   Generalized Dunn index 1998
+-   PBM index 2004
+-   Chou-Su-Lai index 2004
+-   Davies-Bouldin index 2005
+-   STR index 2017
+-   [Wiroonsri index 2024]{.red}
+:::
+:::
+
+::: {.column width="50%"}
+::: nonincremental
+**Soft:**
+
+-   Xie–Beni (XB) index 1991
+-   Pakhira–Bandyopadhyay–Maulik (PBM) index 2004
+-   TANG index 2005
+-   Wu–Li (WL) index 2015
+-   Generalized C index 2016
+-   KWON2 index 2021
+-   [Wiroonsri and Preedasawakul (WP) index]{.red}
+:::
+:::
+:::
+
+## Applying CVI
+
+::: columns
+::: {.column width="20%"}
+![](IMG/var_clust.png){width="700" fig-align="center"}
+:::
+
+::: {.column .center width="70%"}
+![](IMG/nci_motivation.png){width="800" fig-align="center"}
+:::
+:::
+
+## Cluster the data into 8 groups {.scrollable .smaller}
+
+```{r clus, fig.align='center', echo=FALSE}
+clustdata = data |> select(!starts_with(c("RX","RIAGENDR","Group_Drug")))
+kclus = kmeans(clustdata, 8, nstart = 100)
+cc = kclus$cluster
+result = cbind(data,cc)
+# Mean values
+mean8 = result |> select_if(is.numeric) |> group_by(cc) |> summarise(across(everything(),mean)) |> as.data.frame()
+kable(mean8,format = "html")
+```
+
+## 
+
+```{r, echo = FALSE, fig.align='center'}
+mean8_long <- mean8[,-c(2,9)]  |> 
+  pivot_longer(cols = -cc, names_to = "variable", values_to = "value")
+
+# Plot the graph using ggplot
+ggplot(mean8_long, aes(x = variable, y = value, color = as.factor(cc), group = as.factor(cc))) +
+  geom_point(size = 3) +  
+  geom_line(aes(group = cc)) +
+  labs(title = "Comparison of Variables in each group",
+       x = "Variables",
+       y = "Mean Value",
+       color = "Cluster") +
+  theme_minimal() +  
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+```
+
+## Motivation {.scrollable .smaller}
+
+What if the optimal number is not what we are looking for?
+
+![](IMG/nci_motivation.png){width="500" fig-align="center"}
+
+**Brain MRI: tumor detection**
+
+::: columns
+::: {.column width="30%"}
+![](IMG/tumor.jpg){width="300" fig-align="center"}
+:::
+
+::: {.column width="30%"}
+![](IMG/bwp.jpeg){width="300" fig-align="center"}
+:::
+
+::: {.column width="30%"}
+![](IMG/mri8group.png){height="200" fig-align="center"}
+:::
+:::
+
+<br> ![](IMG/motivation.png){width="800" fig-align="center"} <br> Ref: <https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset>
+
+## Bayesian framework and cluster validity index
+
+**Idea**
+
+![](IMG/idea1.png){width="500" fig-align="center"}
+
+## Bayesian framework and cluster validity index
+
+**To be more precise...**
+
+![](IMG/idea2.png){width="500" fig-align="center"}
+
+## Notations
+
+::: {.fragment .f80}
+1.  ${\bf x} = (x_1,x_2,\ldots,x_n)$ denotes a dataset of size $n \in \mathbb{N}$.
+2.  $K \in \mathbb{N}$ is the maximum number of clusters to be considered
+3.  ${\bf p} = (p_2,p_3,\ldots,p_K)$, where $p_k$, $k=2,3,\ldots,K$ represents the probability that the actual number of groups is $k$.
+:::
+
+## Background of BCVI
+
+Assume that
+
+::: f70
+$$
+f({\bf x}|{\bf p}) = C({\bf p}) \prod_{k=2}^Kp_k^{nr_k(x)}
+$$ {#eq-eq2}
+:::
+
+::: f80
+represents the [conditional probability density function of the dataset]{.blue} given ${\bf p}$, where $C({\bf p})$ is the normalizing constant for the probability density function.
+:::
+
+## Background of BCVI
+
+Let $r_k(\bf x)$ be a ratio adjusted from a CVI defined as
+
+::: f70
+$$
+r_k(\bf x) = \begin{cases}
+            \dfrac{GI(k)-\min_j GI(j)}{\sum_{i=2}^K (GI(i)-\min_j GI(j))} \text{  for Condition A, } \\
+            \dfrac{\max_j GI(j)- GI(k)}{\sum_{i=2}^K (\max_j GI(j) - GI(i))}  \text{   for Condition B, } \\
+        \end{cases} 
+$$ {#eq-eq1}
+:::
+
+where [GI]{.red} represents an arbitrary CVI. <br>
+
+::: {.fragment .f80}
+[Condition A:]{.red} The [largest]{.blue} value of the GI indicates the optimal number of clusters.
+
+[Condition B:]{.red} The [smallest]{.blue} value of the GI indicates the optimal number of clusters.
+:::
+
+::: {.fragment .f80}
+It is clear that $0\le r_k(\bf x) \le 1$.
+:::
+
+## Dirichlet prior
+
+Here, we assume that ${\bf p}$ follows a Dirichlet prior distribution with parameters ${\bf \alpha} = (\alpha_2,\ldots,\alpha_K)$ with the probability density function
+
+::: f70
+$$
+\pi({\bf p}) = \frac{1}{B({\bf \alpha})} \prod_{k=2}^K p_k^{\alpha_k-1}.
+$$
+:::
+
+[Reference: [Dirichlet distribution](https://doi.org/10.1214/aoms/1177703748)]{.f60}
+
+## Dirichlet posterior
+
+::: f80
+Let $K \in \mathbb{N}$ and ${\bf r(x)} = (r_2({\bf x}),\ldots,r_K({\bf x}))$, where $r_k({\bf x})$ is defined as in [(1)]{.red}. Assuming that ${\bf x}$ follows the distribution described in [(2)]{.red}, the posterior distribution of ${\bf p}$ has the probability density function:
+
+<br>
+
+$$
+\pi({\bf p}|{\bf x}) = \frac{f({\bf x , p})}{m({\bf x})} = \frac{1}{B({\bf \alpha} + n{\bf r(x)})} \prod_{k=2}^K p_k^{\alpha_k+nr_k({\bf x})-1}.
+$$ <br>
+
+In particular, it follows a Dirichlet distribution with parameters ${\bf \alpha}+ n{\bf r(x)}$.
+:::
+
+## Definition of BCVI
+
+For $k = 2,3,\ldots,K$, the BCVI is then defined as
+
+$$
+\texttt{BCVI}(k) = E[p_k|{\bf x}] = \frac{\alpha_k + nr_k({\bf x})}{\alpha_0+n}
+$$
+
+where $\alpha_0 = \sum_{k=2}^K \alpha_k$.
+
+## {BayesCVI} {.transition .center .center-align}
+
+## BayesCVI
+
+The `BayesCVI` package is an R package that allows users to apply the Bayesian Cluster Validity Index (BCVI) to their clustering results.
+
+::: incremental
+-   The package is compatible with K-means, fuzzy C means, EM clustering, and hierarchical clustering (single, average, and complete linkage).
+-   BCVI is compatible with any existing underlying CVIs
+:::
+
+## Arguments and parameter $\alpha$
+
+Wiroonsri index (Hard)
+
+```{r, eval=FALSE, echo=TRUE}
+# method: "kmeans", "hclust_complete", "hclust_average", "hclust_single"
+# corr: "pearson", "kendall" or "spearman"
+B_Wvalid(x, kmax, method = "kmeans", corr = "pearson", nstart = 100,
+      sampling = 1, NCstart = TRUE, alpha = "default", mult.alpha = 1/2)
+```
+
+::: f80
+The default alpha value corresponds to the case where $\alpha_k=1$ for all k. This is used when users want the results to rely only on underlying CVIs.
+:::
+
+<br>
+
+Alpha
+
+```{r, eval=FALSE, echo=TRUE}
+# Selecting each alpha between 0 to 30 is recommended. 
+# If we consider k from 2 to 10
+aalpha = c(25,25,25,25,25,5,5,5,5)
+
+```
+
+## How to apply
+
+```{r}
+#| echo:  TRUE
+# Determine alpha based on our knowledge
+# Consider k from 2 to 10
+aalpha = c(25,25,25,25,25,5,5,5,5)
+set.seed(50)
+B.WI = B_Wvalid(x = scale(clustdata), kmax = 10, method = "kmeans",
+                corr = "pearson",nstart = 10, sampling = 1, NCstart = TRUE,
+                alpha = aalpha, mult.alpha = 1/2)
+B.WI
+```
+
+## Visualize the result {.scrollable}
+
+```{r}
+#| echo: true
+
+# plot the BCVI
+pplot = plot_BCVI(B.WI)
+```
+
+<br>
+
+```{r}
+#| echo: true
+pplot$plot_index
+pplot$plot_BCVI
+```
+
+## Cluster the data into 4 groups
+
+```{r 4clust, fig.align='center', echo=FALSE}
+set.seed(50)
+kclus = kmeans(scale(clustdata),centers = 4,nstart = 100)
+cc = kclus$cluster
+final  = cbind(data,cc)
+# Summarize numeric variables in each group
+mean4 = final |> select_if(is.numeric) |> group_by(cc) |> summarise(across(everything(),mean)) |> as.data.frame()
+
+```
+
+```{r}
+kable(mean4,format = "html")
+```
+
+## Characteristic comparison {.smaller .scrollable}
+
+```{r, echo=FALSE}
+mean4_long <- mean4[,-c(2,9)] %>%
+  pivot_longer(cols = -cc, names_to = "variable", values_to = "value")
+
+ggplot(mean4_long, aes(x = variable, y = value, color = as.factor(cc), group = as.factor(cc))) +
+  geom_point(size = 3) +  
+  geom_line(aes(group = cc)) + 
+  labs(title = "Comparison of Variables in each group",
+       x = "Variables",
+       y = "Mean Value",
+       color = "Cluster") +
+  theme_minimal() +  
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r, echo=FALSE}
+larage_mean4_long <- mean4[,c(1,2,9)] %>%
+  pivot_longer(cols = -cc, names_to = "variable", values_to = "value")
+
+# Plot the graph using ggplot
+ggplot(larage_mean4_long, aes(x = variable, y = value, color = as.factor(cc), group = as.factor(cc))) +
+  geom_point(size = 3) +  # Add points
+  geom_line(aes(group = cc)) +  # Add lines connecting points
+  labs(title = "Comparison of Variables in each group",
+       x = "Variables",
+       y = "Mean Value",
+       color = "Cluster") +
+  theme_minimal() +  # Apply a minimal theme
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels
+
+```
+
+
+## Characteristic comparison {.scrollable .smaller}
+
+| Characteristic| Group 1| Group 2| Group 3| Group 4|
+|----------------------------------|---------------------------------------|-----------------------------------------------|-----------------------------------------------|-------------------------------------|
+| **Number of Patients**           | 49                                   | 8                                             | 57                                           | 93                                   |
+| **Insulin Levels**               | Highest                              | Slightly elevated                             | Low                                          | Lowest                              |
+| **Glucose Levels**               | Slightly elevated                    | Slightly higher                               | Moderate                                       | Moderate                              |
+| **BMI**                          | Severe obesity, highest BMI          | Overweight, not as high as Group 1            | Normal BMI                                   | Normal BMI                          |
+| **Waist Circumference**          | Largest, abdominal obesity           | Elevated                                      | Smaller than Groups 1 and 2                  | Smaller than Groups 1 and 2 |
+| **Albumin Levels**| Slightly high | Extremely elevated  | Moderate  | Moderate|
+| **Age** | 57  | 68 | 57 | 65|
+
+
+## Distribution of drugs used in each group
+
+```{r}
+stack = final |> group_by(cc,Group_Drug) |> summarise(Count = n())|> mutate(Percent = Count*100/sum(Count)) 
+ggplot(stack, aes(fill=Group_Drug, y=Percent, x=cc)) +
+  geom_bar(position="fill", stat="identity")+ #dodge
+  theme_minimal()+
+  geom_text(aes(label= ifelse(Percent > 5 ,paste0(round(Percent,2),"%"),"")),
+            position=position_fill(vjust=0.5), colour="white", size =3)+
+  #label in stacked
+  labs(x="Group", y = "",fill="Classes of drug")+
+  scale_fill_paletteer_d("ggsci::default_uchicago")
+
+# ggplot(stack, aes(fill=Group_Drug, y=Percent, x=cc)) + 
+#   geom_bar(position="dodge", stat="identity")+ #dodge
+#   theme_minimal()+
+#   labs(x="Group", y = "",fill="Classes of drug")+
+#   scale_fill_paletteer_d("ggsci::default_uchicago")
+
+```
+
+## Potential benefit
+
+It provides a valuable database for healthcare professionals, supporting informed decision-making, developing treatment strategies, and enhancing drug efficacy.
+
+
+## Highlighted Features for BCVI
+
+::: {.incremental .f80}
+-   [Novel and unique concept:]{.red} BCVI allows users to specify their desired range for the final number of clusters.
+
+-   [Flexibility:]{.red} BCVI allows users to flexibly set parameters according to their needs and select any clustering algorithms and underlying CVIs of their choice.
+
+:::
+
+## Drawbacks
+
+::: incremental
+-   It relies on the quality of underlying indices.
+
+-   It is only effective when underlying indices are present, providing meaningful options for ranking local peaks for the final number of clusters.
+:::
+
+## Explore more
+
+**Installation**
+
+```{r install, eval=FALSE, echo=TRUE}
+install.packages("BayesCVI")
+library(BayesCVI)
+```
+
+**Function**
+
+```{r}
+#| eval: false
+#| echo: true
+help(package = "BayesCVI")
+# Data in function 
+# B1_data - B7_data
+```
+
+# References
+
+- [O. Preedasawakul, and N. Wiroonsri, A Bayesian Cluster Validity Index, Computational Statistics & Data Analysis, 202, 108053, 2025.](https://www.sciencedirect.com/science/article/abs/pii/S0167947324001373)
+- <https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2013>
+- <https://www.who.int/health-topics/diabetes#tab=tab_1>
+
+
+# Acknowledgement
+
+[Nathakhun would like to also thank National Research Council of Thailand (NRCT), Grant number: N42A660991 (2023) for the project financial support.]{.f70}
+
+
+## Q&A {.transition .center .center-align}
