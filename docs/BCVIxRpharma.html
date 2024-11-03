@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/tabby.min.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.4.555">
+
+  <meta name="author" content="N. Wiroonsri and O. Preedasawakul">
+  <title>{BayesCVI}</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto.css">
+  <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+
+  .callout {
+    margin-top: 1em;
+    margin-bottom: 1em;  
+    border-radius: .25rem;
+  }
+
+  .callout.callout-style-simple { 
+    padding: 0em 0.5em;
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+    display: flex;
+  }
+
+  .callout.callout-style-default {
+    border-left: solid #acacac .3rem;
+    border-right: solid 1px silver;
+    border-top: solid 1px silver;
+    border-bottom: solid 1px silver;
+  }
+
+  .callout .callout-body-container {
+    flex-grow: 1;
+  }
+
+  .callout.callout-style-simple .callout-body {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-style-default .callout-body {
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+
+  .callout.callout-titled.callout-style-simple .callout-body {
+    margin-top: 0.2em;
+  }
+
+  .callout:not(.callout-titled) .callout-body {
+      display: flex;
+  }
+
+  .callout:not(.no-icon).callout-titled.callout-style-simple .callout-content {
+    padding-left: 1.6em;
+  }
+
+  .callout.callout-titled .callout-header {
+    padding-top: 0.2em;
+    margin-bottom: -0.2em;
+  }
+
+  .callout.callout-titled .callout-title  p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+    
+  .callout.callout-titled.callout-style-simple .callout-content  p {
+    margin-top: 0;
+  }
+
+  .callout.callout-titled.callout-style-default .callout-content  p {
+    margin-top: 0.7em;
+  }
+
+  .callout.callout-style-simple div.callout-title {
+    border-bottom: none;
+    font-size: .9rem;
+    font-weight: 600;
+    opacity: 75%;
+  }
+
+  .callout.callout-style-default  div.callout-title {
+    border-bottom: none;
+    font-weight: 600;
+    opacity: 85%;
+    font-size: 0.9rem;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-default div.callout-content {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .callout.callout-style-simple .callout-icon::before {
+    height: 1rem;
+    width: 1rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 1rem 1rem;
+  }
+
+  .callout.callout-style-default .callout-icon::before {
+    height: 0.9rem;
+    width: 0.9rem;
+    display: inline-block;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: 0.9rem 0.9rem;
+  }
+
+  .callout-title {
+    display: flex
+  }
+    
+  .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  .callout.no-icon::before {
+    display: none !important;
+  }
+
+  .callout.callout-titled .callout-body > .callout-content > :last-child {
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
+  }
+
+  .callout.callout-titled .callout-icon::before {
+    margin-top: .5rem;
+    padding-right: .5rem;
+  }
+
+  .callout:not(.callout-titled) .callout-icon::before {
+    margin-top: 1rem;
+    padding-right: .5rem;
+  }
+
+  /* Callout Types */
+
+  div.callout-note {
+    border-left-color: #4582ec !important;
+  }
+
+  div.callout-note .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEU0lEQVRYCcVXTWhcVRQ+586kSUMMxkyaElstCto2SIhitS5Ek8xUKV2poatCcVHtUlFQk8mbaaziwpWgglJwVaquitBOfhQXFlqlzSJpFSpIYyXNjBNiTCck7x2/8/LeNDOZxDuEkgOXe++553zfefee+/OYLOXFk3+1LLrRdiO81yNqZ6K9cG0P3MeFaMIQjXssE8Z1JzLO9ls20MBZX7oG8w9GxB0goaPrW5aNMp1yOZIa7Wv6o2ykpLtmAPs/vrG14Z+6d4jpbSKuhdcSyq9wGMPXjonwmESXrriLzFGOdDBLB8Y6MNYBu0dRokSygMA/mrun8MGFN3behm6VVAwg4WR3i6FvYK1T7MHo9BK7ydH+1uurECoouk5MPRyVSBrBHMYwVobG2aOXM07sWrn5qgB60rc6mcwIDJtQrnrEr44kmy+UO9r0u9O5/YbkS9juQckLed3DyW2XV/qWBBB3ptvI8EUY3I9p/67OW+g967TNr3Sotn3IuVlfMLVnsBwH4fsnebJvyGm5GeIUA3jljERmrv49SizPYuq+z7c2H/jlGC+Ghhupn/hcapqmcudB9jwJ/3jvnvu6vu5lVzF1fXyZuZZ7U8nRmVzytvT+H3kilYvH09mLWrQdwFSsFEsxFVs5fK7A0g8gMZjbif4ACpKbjv7gNGaD8bUrlk8x+KRflttr22JEMRUbTUwwDQScyzPgedQHZT0xnx7ujw2jfVfExwYHwOsDTjLdJ2ebmeQIlJ7neo41s/DrsL3kl+W2lWvAga0tR3zueGr6GL78M3ifH0rGXrBC2aAR8uYcIA5gwV8zIE8onoh8u0Fca/ciF7j1uOzEnqcIm59sEXoGc0+z6+H45V1CvAvHcD7THztu669cnp+L0okAeIc6zjbM/24LgGM1gZk7jnRu1aQWoU9sfUOuhrmtaPIO3YY1KLLWZaEO5TKUbMY5zx8W9UJ6elpLwKXbsaZ4EFl7B4bMtDv0iRipKoDQT2sNQI9b1utXFdYisi+wzZ/ri/1m7QfDgEuvgUUEIJPq3DhX/5DWNqIXDOweC2wvIR90Oq3lDpdMIgD2r0dXvGdsEW5H6x6HLRJYU7C69VefO1x8Gde1ZFSJLfWS1jbCnhtOPxmpfv2LXOA2Xk2tvnwKKPFuZ/oRmwBwqRQDcKNeVQkYcOjtWVBuM/JuYw5b6isojIkYxyYAFn5K7ZBF10fea52y8QltAg6jnMqNHFBmGkQ1j+U43HMi2xMar1Nv0zGsf1s8nUsmUtPOOrbFIR8bHFDMB5zL13Gmr/kGlCkUzedTzzmzsaJXhYawnA3UmARpiYj5ooJZiUoxFRtK3X6pgNPv+IZVPcnwbOl6f+aBaO1CNvPW9n9LmCp01nuSaTRF2YxHqZ8DYQT6WsXT+RD6eUztwYLZ8rM+rcPxamv1VQzFUkzFXvkiVrySGQgJNvXHJAxiU3/NwiC03rSf05VBaPtu/Z7/B8Yn/w7eguloAAAAAElFTkSuQmCC');
+  }
+
+  div.callout-note.callout-style-default .callout-title {
+    background-color: #dae6fb
+  }
+
+  div.callout-important {
+    border-left-color: #d9534f !important;
+  }
+
+  div.callout-important .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAEKklEQVRYCcVXTWhcVRS+575MJym48A+hSRFr00ySRQhURRfd2HYjk2SSTokuBCkU2o0LoSKKraKIBTcuFCoidGFD08nkBzdREbpQ1EDNIv8qSGMFUboImMSZd4/f9zJv8ibJMC8xJQfO3HPPPef7zrvvvnvviIkpC9nsw0UttFunbUhpFzFtarSd6WJkStVMw5xyVqYTvkwfzuf/5FgtkVoB0729j1rjXwThS7Vio+Mo6DNnvLfahoZ+i/o32lULuJ3NNiz7q6+pyAUkJaFF6JwaM2lUJlV0MlnQn5aTRbEu0SEqHUa0A4AdiGuB1kFXRfVyg5d87+Dg4DL6m2TLAub60ilj7A1Ec4odSAc8X95sHh7+ZRPCFo6Fnp7HfU/fBng/hi10CjCnWnJjsxvDNxWw0NfV6Rv5GgP3I3jGWXumdTD/3cbEOP2ZbOZp69yniG3FQ9z1jD7bnBu9Fc2tKGC2q+uAJOQHBDRiZX1x36o7fWBs7J9ownbtO+n0/qWkvW7UPIfc37WgT6ZGR++EOJyeQDSb9UB+DZ1G6DdLDzyS+b/kBCYGsYgJbSQHuThGKRcw5xdeQf8YdNHsc6ePXrlSYMBuSIAFTGAtQo+VuALo4BX83N190NWZWbynBjhOHsmNfFWLeL6v+ynsA58zDvvAC8j5PkbOcXCMg2PZFk3q8MjI7WAG/Dp9AwP7jdGBOOQkAvlFUB+irtm16I1Zw9YBcpGTGXYmk3kQIC/Cds55l+iMI3jqhjAuaoe+am2Jw5GT3Nbz3CkE12NavmzN5+erJW7046n/CH1RO/RVa8lBLozXk9uqykkGAyRXLWlLv5jyp4RFsG5vGVzpDLnIjTWgnRy2Rr+tDKvRc7Y8AyZq10jj8DqXdnIRNtFZb+t/ZRtXcDiVnzpqx8mPcDWxgARUqx0W1QB9MeUZiNrV4qP+Ehc+BpNgATsTX8ozYKL2NtFYAHc84fG7ndxUPr+AR/iQSns7uSUufAymwDOb2+NjK27lEFocm/EE2WpyIy/Hi66MWuMKJn8RvxIcj87IM5Vh9663ziW36kR0HNenXuxmfaD8JC7tfKbrhFr7LiZCrMjrzTeGx+PmkosrkNzW94ObzwocJ7A1HokLolY+AvkTiD/q1H0cN48c5EL8Crkttsa/AXQVDmutfyku0E7jShx49XqV3MFK8IryDhYVbj7Sj2P2eBxwcXoe8T8idsKKPRcnZw1b+slFTubwUwhktrfnAt7J++jwQtLZcm3sr9LQrjRzz6cfMv9aLvgmnAGvpoaGLxM4mAEaLV7iAzQ3oU0IvD5x9ix3yF2RAAuYAOO2f7PEFWCXZ4C9Pb2UsgDeVnFSpbFK7/IWu7TPTvBqzbGdCHOJQSxiEjt6IyZmxQyEJHv6xyQsYk//moVFsN2zP6fRImjfq7/n/wFDguUQFNEwugAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-important.callout-style-default .callout-title {
+    background-color: #f7dddc
+  }
+
+  div.callout-warning {
+    border-left-color: #f0ad4e !important;
+  }
+
+  div.callout-warning .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAAETklEQVRYCeVWW2gcVRg+58yaTUnizqbipZeX4uWhBEniBaoUX1Ioze52t7sRq6APio9V9MEaoWlVsFasRq0gltaAPuxms8lu0gcviE/FFOstVbSIxgcv6SU7EZqmdc7v9+9mJtNks51NTUH84ed889/PP+cmxP+d5FIbMJmNbpREu4WUkiTtCicKny0l1pIKmBzovF2S+hIJHX8iEu3hZJ5lNZGqyRrGSIQpq15AzF28jgpeY6yk6GVdrfFqdrD6Iw+QlB8g0YS2g7dyQmXM/IDhBhT0UCiRf59lfqmmDvzRt6kByV/m4JjtzuaujMUM2c5Z2d6JdKrRb3K2q6mA+oYVz8JnDdKPmmNthzkAk/lN63sYPgevrguc72aZX/L9C6x09GYyxBgCX4NlvyGUHOKELlm5rXeR1kchuChJt4SSwyddZRXgvwMGvYo4QSlk3/zkHD8UHxwVJA6zjZZqP8v8kK8OWLnIZtLyCAJagYC4rTGW/9Pqj92N/c+LUaAj27movwbi19tk/whRCIE7Q9vyI6yvRpftAKVTdUjOW40X3h5OXsKCdmFcx0xlLJoSuQngnrJe7Kcjm4OMq9FlC7CMmScQANuNvjfP3PjGXDBaUQmbp296S5L4DrpbrHN1T87ZVEZVCzg1FF0Ft+dKrlLukI+/c9ENo+TvlTDbYFvuKPtQ9+l052rXrgKoWkDAFnvh0wTOmYn8R5f4k/jN/fZiCM1tQx9jQQ4ANhqG4hiL0qIFTGViG9DKB7GYzgubnpofgYRwO+DFjh0Zin2m4b/97EDkXkc+f6xYAPX0KK2I/7fUQuwzuwo/L3AkcjugPNixC8cHf0FyPjWlItmLxWw4Ou9YsQCr5fijMGoD/zpdRy95HRysyXA74MWOnscpO4j2y3HAVisw85hX5+AFBRSHt4ShfLFkIMXTqyKFc46xdzQM6XbAi702a7sy04J0+feReMFKp5q9esYLCqAZYw/k14E/xcLLsFElaornTuJB0svMuJINy8xkIYuL+xPAlWRceH6+HX7THJ0djLUom46zREu7tTkxwmf/FdOZ/sh6Q8qvEAiHpm4PJ4a/doJe0gH1t+aHRgCzOvBvJedEK5OFE5jpm4AGP2a8Dxe3gGJ/pAutug9Gp6he92CsSsWBaEcxGx0FHytmIpuqGkOpldqNYQK8cSoXvd+xLxXADw0kf6UkJNFtdo5MOgaLjiQOQHcn+A6h5NuL2s0qsC2LOM75PcF3yr5STuBSAcGG+meA14K/CI21HcS4LBT6tv0QAh8Dr5l93AhZzG5ZJ4VxAqdZUEl9z7WJ4aN+svMvwHHL21UKTd1mqvChH7/Za5xzXBBKrUcB0TQ+Ulgkfbi/H/YT5EptrGzsEK7tR1B7ln9BBwckYfMiuSqklSznIuoIIOM42MQO+QnduCoFCI0bpkzjCjddHPN/F+2Yu+sd9bKNpVwHhbS3LluK/0zgfwD0xYI5dXuzlQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-warning.callout-style-default .callout-title {
+    background-color: #fcefdc
+  }
+
+  div.callout-tip {
+    border-left-color: #02b875 !important;
+  }
+
+  div.callout-tip .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAADr0lEQVRYCe1XTWgTQRj9ZjZV8a9SPIkKgj8I1bMHsUWrqYLVg4Ue6v9BwZOxSYsIerFao7UiUryIqJcqgtpimhbBXoSCVxUFe9CTiogUrUp2Pt+3aUI2u5vdNh4dmMzOzHvvezuz8xNFM0mjnbXaNu1MvFWRXkXEyE6aYOYJpdW4IXuA4r0fo8qqSMDBU0v1HJUgVieAXxzCsdE/YJTdFcVIZQNMyhruOMJKXYFoLfIfIvVIMWdsrd+Rpd86ZmyzzjJmLStqRn0v8lzkb4rVIXvnpScOJuAn2ACC65FkPzEdEy4TPWRLJ2h7z4cArXzzaOdKlbOvKKX25Wl00jSnrwVxAg3o4dRxhO13RBSdNvH0xSARv3adTXbBdTf64IWO2vH0LT+cv4GR1DJt+DUItaQogeBX/chhbTBxEiZ6gftlDNXTrvT7co4ub5A6gp9HIcHvzTa46OS5fBeP87Qm0fQkr4FsYgVQ7Qg+ZayaDg9jhg1GkWj8RG6lkeSacrrHgDaxdoBiZPg+NXV/KifMuB6//JmYH4CntVEHy/keA6x4h4CU5oFy8GzrBS18cLJMXcljAKB6INjWsRcuZBWVaS3GDrqB7rdapVIeA+isQ57Eev9eCqzqOa81CY05VLd6SamW2wA2H3SiTbnbSxmzfp7WtKZkqy4mdyAlGx7ennghYf8voqp9cLSgKdqNfa6RdRsAAkPwRuJZNbpByn+RrJi1RXTwdi8RQF6ymDwGMAtZ6TVE+4uoKh+MYkcLsT0Hk8eAienbiGdjJHZTpmNjlbFJNKDVAp2fJlYju6IreQxQ08UJDNYdoLSl6AadO+fFuCQqVMB1NJwPm69T04Wv5WhfcWyfXQB+wXRs1pt+nCknRa0LVzSA/2B+a9+zQJadb7IyyV24YAxKp2Jqs3emZTuNnKxsah+uabKbMk7CbTgJx/zIgQYErIeTKRQ9yD9wxVof5YolPHqaWo7TD6tJlh7jQnK5z2n3+fGdggIOx2kaa2YI9QWarc5Ce1ipNWMKeSG4DysFF52KBmTNMmn5HqCFkwy34rDg05gDwgH3bBi+sgFhN/e8QvRn8kbamCOhgrZ9GJhFDgfcMHzFb6BAtjKpFhzTjwv1KCVuxHvCbsSiEz4CANnj84cwHdFXAbAOJ4LTSAawGWFn5tDhLMYz6nWeU2wJfIhmIJBefcd/A5FWQWGgrWzyORZ3Q6HuV+Jf0Bj+BTX69fm1zWgK7By1YTXchFDORywnfQ7GpzOo6S+qECrsx2ifVQAAAABJRU5ErkJggg==');
+  }
+
+  div.callout-tip.callout-style-default .callout-title {
+    background-color: #ccf1e3
+  }
+
+  div.callout-caution {
+    border-left-color: #fd7e14 !important;
+  }
+
+  div.callout-caution .callout-icon::before {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAIKADAAQAAAABAAAAIAAAAACshmLzAAACV0lEQVRYCdVWzWoUQRCuqp2ICBLJXgITZL1EfQDBW/bkzUMUD7klD+ATSHBEfAIfQO+iXsWDxJsHL96EHAwhgzlkg8nBg25XWb0zIb0zs9muYYWkoKeru+vn664fBqElyZNuyh167NXJ8Ut8McjbmEraKHkd7uAnAFku+VWdb3reSmRV8PKSLfZ0Gjn3a6Xlcq9YGb6tADjn+lUfTXtVmaZ1KwBIvFI11rRXlWlatwIAAv2asaa9mlB9wwygiDX26qaw1yYPzFXg2N1GgG0FMF8Oj+VIx7E/03lHx8UhvYyNZLN7BwSPgekXXLribw7w5/c8EF+DBK5idvDVYtEEwMeYefjjLAdEyQ3M9nfOkgnPTEkYU+sxMq0BxNR6jExrAI31H1rzvLEfRIdgcv1XEdj6QTQAS2wtstEALLG1yEZ3QhH6oDX7ExBSFEkFINXH98NTrme5IOaaA7kIfiu2L8A3qhH9zRbukdCqdsA98TdElyeMe5BI8Rs2xHRIsoTSSVFfCFCWGPn9XHb4cdobRIWABNf0add9jakDjQJpJ1bTXOJXnnRXHRf+dNL1ZV1MBRCXhMbaHqGI1JkKIL7+i8uffuP6wVQAzO7+qVEbF6NbS0LJureYcWXUUhH66nLR5rYmva+2tjRFtojkM2aD76HEGAD3tPtKM309FJg5j/K682ywcWJ3PASCcycH/22u+Bh7Aa0ehM2Fu4z0SAE81HF9RkB21c5bEn4Dzw+/qNOyXr3DCTQDMBOdhi4nAgiFDGCinIa2owCEChUwD8qzd03PG+qdW/4fDzjUMcE1ZpIAAAAASUVORK5CYII=');
+  }
+
+  div.callout-caution.callout-style-default .callout-title {
+    background-color: #ffe5d0
+  }
+
+  </style>
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" data-background-image="logo.png" data-background-position="2% 2%" data-background-size="20%" class="quarto-title-block center">
+  <h1 class="title">{BayesCVI}</h1>
+  <p class="subtitle">A Bayesian cluster validity index with medical applications</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+N. Wiroonsri and O. Preedasawakul 
+</div>
+        <p class="quarto-title-affiliation">
+            King Mongkut’s University of Technology Thonburi
+          </p>
+    </div>
+</div>
+
+</section>
+<section id="section" class="slide level2 smaller">
+<h2></h2>
+<p><strong>Objective</strong> <br> Learn prescribed drugs patterns through clustering</p>
+<p><strong>Why it matters</strong></p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Personalized medicine <img data-src="IMG/per_med.png" class="quarto-figure quarto-figure-center" width="300"> <br></p>
+<p>Ref: <a href="https://www.flaticon.com/free-icon/personalized_6283312">Figure 1</a></p>
+</div><div class="column center" style="width:50%;">
+<p>Drug development <img data-src="IMG/dev_drug.png" class="quarto-figure quarto-figure-center" width="300"> <br></p>
+<p>Ref: <a href="https://www.freepik.com/icon/analysis_5945018">Figure 2</a></p>
+</div>
+</div>
+</section>
+<section id="what-we-will-cover-today" class="slide level2 transition">
+<h2>What we will cover today</h2>
+<div>
+<ul>
+<li class="fragment">Background</li>
+<li class="fragment">Motivation</li>
+<li class="fragment">A Bayesian cluster validity index</li>
+<li class="fragment">Introduction to the <code>BayesCVI</code> package</li>
+<li class="fragment">Conclusion</li>
+</ul>
+</div>
+</section>
+<section id="public-health-issue" class="slide level2">
+<h2>Public health issue</h2>
+<p><a href="https://www.who.int/health-topics/diabetes#tab=tab_1">Diabetes</a> is a chronic, metabolic disease characterized by elevated levels of blood glucose (or blood sugar), which leads over time to serious damage to the heart, blood vessels, eyes, kidneys and nerves.</p>
+
+<img data-src="IMG/diabetes_complications.png" class="quarto-figure quarto-figure-center r-stretch" width="400"></section>
+<section id="diabetes" class="slide level2">
+<h2>Diabetes</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Diabetes is a global health crisis that has seen a dramatic rise in recent years. According to <a href="https://www.who.int/news-room/fact-sheets/detail/the-top-10-causes-of-death">World Health Organization</a> in 2021, it ranked among the top 10 causes of death worldwide, with a staggering 95% increase since 2000.</p>
+</div><div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="IMG/top10_cause.png" class="quarto-figure quarto-figure-center" height="600"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="data-overview" class="slide level2 scrollable smaller left">
+<h2>Data overview</h2>
+<p>National Health and Nutrition Examination Survey (NHANES) datasets from 2013-2014 Source: <a href="https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2013">National Health and Nutrition Examination Survey</a></p>
+<p>Information: 207 diabetes patients, including 15 variables.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top" style="width:100%;">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 6%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 6%">
+<col style="width: 5%">
+<col style="width: 6%">
+<col style="width: 5%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">RXDDRUG</th>
+<th style="text-align: right;">RXDDAYS</th>
+<th style="text-align: right;">LBXIN</th>
+<th style="text-align: right;">LBXGH</th>
+<th style="text-align: right;">LBDLDL</th>
+<th style="text-align: right;">LBXTR</th>
+<th style="text-align: right;">LBDHDD</th>
+<th style="text-align: right;">LBXTC</th>
+<th style="text-align: right;">URXUMA</th>
+<th style="text-align: right;">BPXSY1</th>
+<th style="text-align: right;">BPXDI1</th>
+<th style="text-align: right;">BMXBMI</th>
+<th style="text-align: right;">BMXWAIST</th>
+<th style="text-align: right;">RIDAGEYR</th>
+<th style="text-align: left;">RIAGENDR</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">INSULIN ASPART</td>
+<td style="text-align: right;">365</td>
+<td style="text-align: right;">5.83</td>
+<td style="text-align: right;">8.9</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">51</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">126</td>
+<td style="text-align: right;">11.9</td>
+<td style="text-align: right;">140</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">28.9</td>
+<td style="text-align: right;">109.2</td>
+<td style="text-align: right;">72</td>
+<td style="text-align: left;">Male</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GLIPIZIDE</td>
+<td style="text-align: right;">4745</td>
+<td style="text-align: right;">5.91</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">108</td>
+<td style="text-align: right;">47</td>
+<td style="text-align: right;">140</td>
+<td style="text-align: right;">29.2</td>
+<td style="text-align: right;">138</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">24.8</td>
+<td style="text-align: right;">98.0</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: left;">Female</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><br> Medications</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 79%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Variable</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>RXDDRUG</td>
+<td>Generic drug name</td>
+</tr>
+<tr class="even">
+<td>RXDDAYS</td>
+<td>For how long have you been using or taking PRODUCT NAME?</td>
+</tr>
+</tbody>
+</table>
+<p><br> Laboratory results</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th><strong>Variable</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>LBXIN</td>
+<td>Insulin (uU/mL)</td>
+</tr>
+<tr class="even">
+<td>LBXGH</td>
+<td>Glycohemoglobin (%)</td>
+</tr>
+<tr class="odd">
+<td>LBXTR</td>
+<td>Triglyceride (mg/dL)</td>
+</tr>
+<tr class="even">
+<td>LBDLDL</td>
+<td>LDL-cholesterol (mg/dL)</td>
+</tr>
+<tr class="odd">
+<td>LBDHDD</td>
+<td>Direct HDL-Cholesterol (mg/dL)</td>
+</tr>
+<tr class="even">
+<td>LBXTC</td>
+<td>Total Cholesterol (mg/dL)</td>
+</tr>
+<tr class="odd">
+<td>URXUMA</td>
+<td>Albumin, urine (ug/mL)</td>
+</tr>
+</tbody>
+</table>
+<p><br> Medical examinations</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th><strong>Variable</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>BPXSY1</td>
+<td>Systolic: Blood pressure (first reading) (mm Hg)</td>
+</tr>
+<tr class="even">
+<td>BPXDI1</td>
+<td>Diastolic: Blood pressure (first reading) (mm Hg)</td>
+</tr>
+<tr class="odd">
+<td>BMXBMI</td>
+<td>Body Mass Index (kg/m²)</td>
+</tr>
+<tr class="even">
+<td>BMXWAIST</td>
+<td>Waist Circumference (cm)</td>
+</tr>
+</tbody>
+</table>
+<p><br><br>
+Demographics</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Variable</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>RIDAGEYR</td>
+<td>Age in years of the participant at the time of screening</td>
+</tr>
+<tr class="even">
+<td>RIAGENDR</td>
+<td>Gender of the participant</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="classes-of-diabetic-drugs-in-this-data" class="slide level2 scrollable">
+<h2>Classes of diabetic drugs in this data</h2>
+
+<img data-src="IMG/classdrug.png" class="quarto-figure quarto-figure-center r-stretch" width="800"></section>
+<section id="background" class="slide level2 smaller">
+<h2>Background</h2>
+<p><strong>Cluster analysis (CA)</strong> is an unsupervised learning tool in machine learning that is widely used in various areas.</p>
+
+<img data-src="IMG/patient_clust.jpg" class="quarto-figure quarto-figure-center r-stretch" width="500"><p>The aim is to identify natural groupings within a dataset that are not initially apparent and without prior knowledge of the groups. <br></p>
+<div class="f70">
+<p>Ref: <a href="https://www.discoverdatascience.org/articles/breaking-down-the-top-data-science-algorithms-methods/">Figure</a></p>
+</div>
+</section>
+<section id="clustering-algorithms" class="slide level2">
+<h2>Clustering algorithms</h2>
+
+<img data-src="IMG/clus.algorithm.png" class="quarto-figure quarto-figure-center r-stretch" width="400"></section>
+<section id="determining-the-number-of-clusters" class="slide level2">
+<h2>Determining the number of clusters</h2>
+<p>Elbow method <br></p>
+
+<img data-src="IMG/elbow.jpeg" class="quarto-figure quarto-figure-center r-stretch" width="900"></section>
+<section id="determining-the-number-of-clusters-1" class="slide level2 scrollable smaller">
+<h2>Determining the number of clusters</h2>
+<p><strong>Cluster Validity index (CVI)</strong></p>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div>
+<p><strong>Hard:</strong></p>
+<ul>
+<li>Dunn’s Index 1973</li>
+<li>Calinski-Harabasz 1974</li>
+<li>Davies-Bouldin’s index 1979</li>
+<li>Point biserial correlation 1980</li>
+<li>Silhouette coefficient (Rousseeuw [1987], Sarle [1991])</li>
+<li>Generalized Dunn index 1998</li>
+<li>PBM index 2004</li>
+<li>Chou-Su-Lai index 2004</li>
+<li>Davies-Bouldin index 2005</li>
+<li>STR index 2017</li>
+<li><span class="red">Wiroonsri index 2024</span></li>
+</ul>
+</div>
+</div><div class="column" style="width:50%;">
+<div>
+<p><strong>Soft:</strong></p>
+<ul>
+<li>Xie–Beni (XB) index 1991</li>
+<li>Pakhira–Bandyopadhyay–Maulik (PBM) index 2004</li>
+<li>TANG index 2005</li>
+<li>Wu–Li (WL) index 2015</li>
+<li>Generalized C index 2016</li>
+<li>KWON2 index 2021</li>
+<li><span class="red">Wiroonsri and Preedasawakul (WP) index</span></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="applying-cvi" class="slide level2">
+<h2>Applying CVI</h2>
+<div class="columns">
+<div class="column" style="width:20%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="IMG/var_clust.png" class="quarto-figure quarto-figure-center" width="700"></p>
+</figure>
+</div>
+</div><div class="column center" style="width:70%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="IMG/nci_motivation.png" class="quarto-figure quarto-figure-center" width="800"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="cluster-the-data-into-8-groups" class="slide level2 scrollable smaller">
+<h2>Cluster the data into 8 groups</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<table class="caption-top" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">cc</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">RXDDAYS</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">LBXIN</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">LBXGH</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">LBDLDL</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">LBXTR</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">LBDHDD</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">LBXTC</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">URXUMA</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">BPXSY1</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">BPXDI1</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">BMXBMI</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">BMXWAIST</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">RIDAGEYR</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4628.000</td>
+<td style="text-align: right;">6.753333</td>
+<td style="text-align: right;">7.466667</td>
+<td style="text-align: right;">94.66667</td>
+<td style="text-align: right;">143.33333</td>
+<td style="text-align: right;">49.33333</td>
+<td style="text-align: right;">172.6667</td>
+<td style="text-align: right;">3566.66667</td>
+<td style="text-align: right;">184.0000</td>
+<td style="text-align: right;">58.00000</td>
+<td style="text-align: right;">31.63333</td>
+<td style="text-align: right;">106.4667</td>
+<td style="text-align: right;">74.33333</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1562.987</td>
+<td style="text-align: right;">23.088125</td>
+<td style="text-align: right;">7.451250</td>
+<td style="text-align: right;">112.56250</td>
+<td style="text-align: right;">140.73750</td>
+<td style="text-align: right;">50.15000</td>
+<td style="text-align: right;">190.9000</td>
+<td style="text-align: right;">18.96500</td>
+<td style="text-align: right;">126.1000</td>
+<td style="text-align: right;">71.17500</td>
+<td style="text-align: right;">31.89125</td>
+<td style="text-align: right;">108.4963</td>
+<td style="text-align: right;">59.82500</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1748.379</td>
+<td style="text-align: right;">28.413448</td>
+<td style="text-align: right;">7.827586</td>
+<td style="text-align: right;">96.62069</td>
+<td style="text-align: right;">279.17241</td>
+<td style="text-align: right;">43.10345</td>
+<td style="text-align: right;">195.5172</td>
+<td style="text-align: right;">49.73448</td>
+<td style="text-align: right;">129.5172</td>
+<td style="text-align: right;">65.79310</td>
+<td style="text-align: right;">32.81724</td>
+<td style="text-align: right;">111.9759</td>
+<td style="text-align: right;">60.89655</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">3066.000</td>
+<td style="text-align: right;">27.914000</td>
+<td style="text-align: right;">7.320000</td>
+<td style="text-align: right;">85.40000</td>
+<td style="text-align: right;">106.60000</td>
+<td style="text-align: right;">44.40000</td>
+<td style="text-align: right;">151.2000</td>
+<td style="text-align: right;">1020.00000</td>
+<td style="text-align: right;">150.0000</td>
+<td style="text-align: right;">78.00000</td>
+<td style="text-align: right;">31.94000</td>
+<td style="text-align: right;">108.1600</td>
+<td style="text-align: right;">57.20000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">2673.059</td>
+<td style="text-align: right;">33.377647</td>
+<td style="text-align: right;">7.858823</td>
+<td style="text-align: right;">85.94118</td>
+<td style="text-align: right;">111.05882</td>
+<td style="text-align: right;">47.52941</td>
+<td style="text-align: right;">155.6471</td>
+<td style="text-align: right;">298.79412</td>
+<td style="text-align: right;">139.7647</td>
+<td style="text-align: right;">68.00000</td>
+<td style="text-align: right;">33.63529</td>
+<td style="text-align: right;">111.5059</td>
+<td style="text-align: right;">64.29412</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">14.000</td>
+<td style="text-align: right;">129.340000</td>
+<td style="text-align: right;">11.600000</td>
+<td style="text-align: right;">72.00000</td>
+<td style="text-align: right;">175.00000</td>
+<td style="text-align: right;">33.00000</td>
+<td style="text-align: right;">140.0000</td>
+<td style="text-align: right;">7400.00000</td>
+<td style="text-align: right;">146.0000</td>
+<td style="text-align: right;">94.00000</td>
+<td style="text-align: right;">38.20000</td>
+<td style="text-align: right;">128.8000</td>
+<td style="text-align: right;">48.00000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">1877.149</td>
+<td style="text-align: right;">15.616418</td>
+<td style="text-align: right;">7.246269</td>
+<td style="text-align: right;">76.35821</td>
+<td style="text-align: right;">79.41791</td>
+<td style="text-align: right;">52.70149</td>
+<td style="text-align: right;">144.9254</td>
+<td style="text-align: right;">20.36866</td>
+<td style="text-align: right;">126.0299</td>
+<td style="text-align: right;">64.71642</td>
+<td style="text-align: right;">30.14328</td>
+<td style="text-align: right;">105.2075</td>
+<td style="text-align: right;">61.53731</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">3139.000</td>
+<td style="text-align: right;">28.394000</td>
+<td style="text-align: right;">8.280000</td>
+<td style="text-align: right;">128.80000</td>
+<td style="text-align: right;">171.00000</td>
+<td style="text-align: right;">47.20000</td>
+<td style="text-align: right;">210.4000</td>
+<td style="text-align: right;">1924.80000</td>
+<td style="text-align: right;">160.8000</td>
+<td style="text-align: right;">66.80000</td>
+<td style="text-align: right;">33.38000</td>
+<td style="text-align: right;">114.2800</td>
+<td style="text-align: right;">65.40000</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</section>
+<section id="section-1" class="slide level2">
+<h2></h2>
+
+<img data-src="BCVIxRpharma_files/figure-revealjs/unnamed-chunk-4-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
+<section id="motivation" class="slide level2 scrollable smaller">
+<h2>Motivation</h2>
+<p>What if the optimal number is not what we are looking for?</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="IMG/nci_motivation.png" class="quarto-figure quarto-figure-center" width="500"></p>
+</figure>
+</div>
+<p><strong>Brain MRI: tumor detection</strong></p>
+<div class="columns">
+<div class="column" style="width:30%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="IMG/tumor.jpg" class="quarto-figure quarto-figure-center" width="300"></p>
+</figure>
+</div>
+</div><div class="column" style="width:30%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="IMG/bwp.jpeg" class="quarto-figure quarto-figure-center" width="300"></p>
+</figure>
+</div>
+</div><div class="column" style="width:30%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="IMG/mri8group.png" class="quarto-figure quarto-figure-center" height="200"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><br> <img data-src="IMG/motivation.png" class="quarto-figure quarto-figure-center" width="800"> <br> Ref: <a href="https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset" class="uri">https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset</a></p>
+</section>
+<section id="bayesian-framework-and-cluster-validity-index" class="slide level2">
+<h2>Bayesian framework and cluster validity index</h2>
+<p><strong>Idea</strong></p>
+
+<img data-src="IMG/idea1.png" class="quarto-figure quarto-figure-center r-stretch" width="500"></section>
+<section id="bayesian-framework-and-cluster-validity-index-1" class="slide level2">
+<h2>Bayesian framework and cluster validity index</h2>
+<p><strong>To be more precise…</strong></p>
+
+<img data-src="IMG/idea2.png" class="quarto-figure quarto-figure-center r-stretch" width="500"></section>
+<section id="notations" class="slide level2">
+<h2>Notations</h2>
+<div class="fragment f80">
+<ol type="1">
+<li class="fragment"><span class="math inline">\({\bf x} = (x_1,x_2,\ldots,x_n)\)</span> denotes a dataset of size <span class="math inline">\(n \in \mathbb{N}\)</span>.</li>
+<li class="fragment"><span class="math inline">\(K \in \mathbb{N}\)</span> is the maximum number of clusters to be considered</li>
+<li class="fragment"><span class="math inline">\({\bf p} = (p_2,p_3,\ldots,p_K)\)</span>, where <span class="math inline">\(p_k\)</span>, <span class="math inline">\(k=2,3,\ldots,K\)</span> represents the probability that the actual number of groups is <span class="math inline">\(k\)</span>.</li>
+</ol>
+</div>
+</section>
+<section id="background-of-bcvi" class="slide level2">
+<h2>Background of BCVI</h2>
+<p>Assume that</p>
+<div class="f70">
+<p><span id="eq-eq2"><span class="math display">\[
+f({\bf x}|{\bf p}) = C({\bf p}) \prod_{k=2}^Kp_k^{nr_k(x)}
+\qquad(1)\]</span></span></p>
+</div>
+<div class="f80">
+<p>represents the <span class="blue">conditional probability density function of the dataset</span> given <span class="math inline">\({\bf p}\)</span>, where <span class="math inline">\(C({\bf p})\)</span> is the normalizing constant for the probability density function.</p>
+</div>
+</section>
+<section id="background-of-bcvi-1" class="slide level2">
+<h2>Background of BCVI</h2>
+<p>Let <span class="math inline">\(r_k(\bf x)\)</span> be a ratio adjusted from a CVI defined as</p>
+<div class="f70">
+<p><span id="eq-eq1"><span class="math display">\[
+r_k(\bf x) = \begin{cases}
+            \dfrac{GI(k)-\min_j GI(j)}{\sum_{i=2}^K (GI(i)-\min_j GI(j))} \text{  for Condition A, } \\
+            \dfrac{\max_j GI(j)- GI(k)}{\sum_{i=2}^K (\max_j GI(j) - GI(i))}  \text{   for Condition B, } \\
+        \end{cases}
+\qquad(2)\]</span></span></p>
+</div>
+<p>where <span class="red">GI</span> represents an arbitrary CVI. <br></p>
+<div class="fragment f80">
+<p><span class="red">Condition A:</span> The <span class="blue">largest</span> value of the GI indicates the optimal number of clusters.</p>
+<p><span class="red">Condition B:</span> The <span class="blue">smallest</span> value of the GI indicates the optimal number of clusters.</p>
+</div>
+<div class="fragment f80">
+<p>It is clear that <span class="math inline">\(0\le r_k(\bf x) \le 1\)</span>.</p>
+</div>
+</section>
+<section id="dirichlet-prior" class="slide level2">
+<h2>Dirichlet prior</h2>
+<p>Here, we assume that <span class="math inline">\({\bf p}\)</span> follows a Dirichlet prior distribution with parameters <span class="math inline">\({\bf \alpha} = (\alpha_2,\ldots,\alpha_K)\)</span> with the probability density function</p>
+<div class="f70">
+<p><span class="math display">\[
+\pi({\bf p}) = \frac{1}{B({\bf \alpha})} \prod_{k=2}^K p_k^{\alpha_k-1}.
+\]</span></p>
+</div>
+<p><span class="f60">Reference: <a href="https://doi.org/10.1214/aoms/1177703748">Dirichlet distribution</a></span></p>
+</section>
+<section id="dirichlet-posterior" class="slide level2">
+<h2>Dirichlet posterior</h2>
+<div class="f80">
+<p>Let <span class="math inline">\(K \in \mathbb{N}\)</span> and <span class="math inline">\({\bf r(x)} = (r_2({\bf x}),\ldots,r_K({\bf x}))\)</span>, where <span class="math inline">\(r_k({\bf x})\)</span> is defined as in <span class="red">(1)</span>. Assuming that <span class="math inline">\({\bf x}\)</span> follows the distribution described in <span class="red">(2)</span>, the posterior distribution of <span class="math inline">\({\bf p}\)</span> has the probability density function:</p>
+<p><br></p>
+<p><span class="math display">\[
+\pi({\bf p}|{\bf x}) = \frac{f({\bf x , p})}{m({\bf x})} = \frac{1}{B({\bf \alpha} + n{\bf r(x)})} \prod_{k=2}^K p_k^{\alpha_k+nr_k({\bf x})-1}.
+\]</span> <br></p>
+<p>In particular, it follows a Dirichlet distribution with parameters <span class="math inline">\({\bf \alpha}+ n{\bf r(x)}\)</span>.</p>
+</div>
+</section>
+<section id="definition-of-bcvi" class="slide level2">
+<h2>Definition of BCVI</h2>
+<p>For <span class="math inline">\(k = 2,3,\ldots,K\)</span>, the BCVI is then defined as</p>
+<p><span class="math display">\[
+\texttt{BCVI}(k) = E[p_k|{\bf x}] = \frac{\alpha_k + nr_k({\bf x})}{\alpha_0+n}
+\]</span></p>
+<p>where <span class="math inline">\(\alpha_0 = \sum_{k=2}^K \alpha_k\)</span>.</p>
+</section>
+<section id="bayescvi" class="slide level2 transition center center-align">
+<h2>{BayesCVI}</h2>
+</section>
+<section id="bayescvi-1" class="slide level2">
+<h2>BayesCVI</h2>
+<p>The <code>BayesCVI</code> package is an R package that allows users to apply the Bayesian Cluster Validity Index (BCVI) to their clustering results.</p>
+<div>
+<ul>
+<li class="fragment">The package is compatible with K-means, fuzzy C means, EM clustering, and hierarchical clustering (single, average, and complete linkage).</li>
+<li class="fragment">BCVI is compatible with any existing underlying CVIs</li>
+</ul>
+</div>
+</section>
+<section id="arguments-and-parameter-alpha" class="slide level2">
+<h2>Arguments and parameter <span class="math inline">\(\alpha\)</span></h2>
+<p>Wiroonsri index (Hard)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="co"># method: "kmeans", "hclust_complete", "hclust_average", "hclust_single"</span></span>
+<span id="cb1-2"><a></a><span class="co"># corr: "pearson", "kendall" or "spearman"</span></span>
+<span id="cb1-3"><a></a><span class="fu">B_Wvalid</span>(x, kmax, <span class="at">method =</span> <span class="st">"kmeans"</span>, <span class="at">corr =</span> <span class="st">"pearson"</span>, <span class="at">nstart =</span> <span class="dv">100</span>,</span>
+<span id="cb1-4"><a></a>      <span class="at">sampling =</span> <span class="dv">1</span>, <span class="at">NCstart =</span> <span class="cn">TRUE</span>, <span class="at">alpha =</span> <span class="st">"default"</span>, <span class="at">mult.alpha =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="f80">
+<p>The default alpha value corresponds to the case where <span class="math inline">\(\alpha_k=1\)</span> for all k. This is used when users want the results to rely only on underlying CVIs.</p>
+</div>
+<p><br></p>
+<p>Alpha</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co"># Selecting each alpha between 0 to 30 is recommended. </span></span>
+<span id="cb2-2"><a></a><span class="co"># If we consider k from 2 to 10</span></span>
+<span id="cb2-3"><a></a>aalpha <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">25</span>,<span class="dv">25</span>,<span class="dv">25</span>,<span class="dv">25</span>,<span class="dv">25</span>,<span class="dv">5</span>,<span class="dv">5</span>,<span class="dv">5</span>,<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="how-to-apply" class="slide level2">
+<h2>How to apply</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="co"># Determine alpha based on our knowledge</span></span>
+<span id="cb3-2"><a></a><span class="co"># Consider k from 2 to 10</span></span>
+<span id="cb3-3"><a></a>aalpha <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">25</span>,<span class="dv">25</span>,<span class="dv">25</span>,<span class="dv">25</span>,<span class="dv">25</span>,<span class="dv">5</span>,<span class="dv">5</span>,<span class="dv">5</span>,<span class="dv">5</span>)</span>
+<span id="cb3-4"><a></a><span class="fu">set.seed</span>(<span class="dv">50</span>)</span>
+<span id="cb3-5"><a></a>B.WI <span class="ot">=</span> <span class="fu">B_Wvalid</span>(<span class="at">x =</span> <span class="fu">scale</span>(clustdata), <span class="at">kmax =</span> <span class="dv">10</span>, <span class="at">method =</span> <span class="st">"kmeans"</span>,</span>
+<span id="cb3-6"><a></a>                <span class="at">corr =</span> <span class="st">"pearson"</span>,<span class="at">nstart =</span> <span class="dv">10</span>, <span class="at">sampling =</span> <span class="dv">1</span>, <span class="at">NCstart =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-7"><a></a>                <span class="at">alpha =</span> aalpha, <span class="at">mult.alpha =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb3-8"><a></a>B.WI</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$BCVI
+   k       BCVI
+1  2 0.16458037
+2  3 0.15846049
+3  4 0.18115842
+4  5 0.15863418
+5  6 0.16133557
+6  7 0.03308408
+7  8 0.05575108
+8  9 0.03137009
+9 10 0.05562574
+
+$VAR
+   k          Var
+1  2 5.993133e-05
+2  3 5.812551e-05
+3  4 6.465910e-05
+4  5 5.817721e-05
+5  6 5.897794e-05
+6  7 1.394373e-05
+7  8 2.294621e-05
+8  9 1.324478e-05
+9 10 2.289766e-05
+
+$Index
+   k         NCI
+1  2  4.26091013
+2  3  0.06102601
+3  4 15.63792156
+4  5  0.18022009
+5  6  2.03410523
+6  7  0.13235949
+7  8 15.68803415
+8  9 -1.04389746
+9 10 15.60201492</code></pre>
+</div>
+</div>
+</section>
+<section id="visualize-the-result" class="slide level2 scrollable">
+<h2>Visualize the result</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="co"># plot the BCVI</span></span>
+<span id="cb5-2"><a></a>pplot <span class="ot">=</span> <span class="fu">plot_BCVI</span>(B.WI)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>pplot<span class="sc">$</span>plot_index</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="BCVIxRpharma_files/figure-revealjs/unnamed-chunk-9-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>pplot<span class="sc">$</span>plot_BCVI</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="BCVIxRpharma_files/figure-revealjs/unnamed-chunk-9-2.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="cluster-the-data-into-4-groups" class="slide level2">
+<h2>Cluster the data into 4 groups</h2>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">cc</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">RXDDAYS</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">LBXIN</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">LBXGH</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">LBDLDL</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">LBXTR</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">LBDHDD</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">LBXTC</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">URXUMA</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">BPXSY1</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">BPXDI1</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">BMXBMI</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">BMXWAIST</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">RIDAGEYR</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1392.918</td>
+<td style="text-align: right;">47.38816</td>
+<td style="text-align: right;">7.669388</td>
+<td style="text-align: right;">90.00000</td>
+<td style="text-align: right;">167.8571</td>
+<td style="text-align: right;">43.48980</td>
+<td style="text-align: right;">167.0612</td>
+<td style="text-align: right;">99.62857</td>
+<td style="text-align: right;">126.4082</td>
+<td style="text-align: right;">70.61224</td>
+<td style="text-align: right;">40.59184</td>
+<td style="text-align: right;">128.7592</td>
+<td style="text-align: right;">57.67347</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3516.625</td>
+<td style="text-align: right;">35.09375</td>
+<td style="text-align: right;">8.387500</td>
+<td style="text-align: right;">102.50000</td>
+<td style="text-align: right;">151.5000</td>
+<td style="text-align: right;">46.25000</td>
+<td style="text-align: right;">179.1250</td>
+<td style="text-align: right;">3250.50000</td>
+<td style="text-align: right;">167.5000</td>
+<td style="text-align: right;">62.75000</td>
+<td style="text-align: right;">33.40000</td>
+<td style="text-align: right;">113.0875</td>
+<td style="text-align: right;">67.75000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1598.439</td>
+<td style="text-align: right;">14.88439</td>
+<td style="text-align: right;">8.098246</td>
+<td style="text-align: right;">132.15789</td>
+<td style="text-align: right;">150.5789</td>
+<td style="text-align: right;">54.14035</td>
+<td style="text-align: right;">216.4912</td>
+<td style="text-align: right;">73.45965</td>
+<td style="text-align: right;">127.6491</td>
+<td style="text-align: right;">72.24561</td>
+<td style="text-align: right;">28.66140</td>
+<td style="text-align: right;">100.3474</td>
+<td style="text-align: right;">57.43860</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">2197.624</td>
+<td style="text-align: right;">13.59914</td>
+<td style="text-align: right;">6.986021</td>
+<td style="text-align: right;">75.78495</td>
+<td style="text-align: right;">113.3011</td>
+<td style="text-align: right;">50.03226</td>
+<td style="text-align: right;">148.4409</td>
+<td style="text-align: right;">76.93226</td>
+<td style="text-align: right;">130.1720</td>
+<td style="text-align: right;">64.58065</td>
+<td style="text-align: right;">28.64731</td>
+<td style="text-align: right;">102.1312</td>
+<td style="text-align: right;">64.62366</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</section>
+<section id="characteristic-comparison" class="slide level2 smaller scrollable">
+<h2>Characteristic comparison</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="BCVIxRpharma_files/figure-revealjs/unnamed-chunk-11-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="BCVIxRpharma_files/figure-revealjs/unnamed-chunk-12-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="characteristic-comparison-1" class="slide level2 scrollable smaller">
+<h2>Characteristic comparison</h2>
+<table class="caption-top" style="width:100%;">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 19%">
+<col style="width: 23%">
+<col style="width: 23%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Characteristic</th>
+<th>Group 1</th>
+<th>Group 2</th>
+<th>Group 3</th>
+<th>Group 4</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Number of Patients</strong></td>
+<td>49</td>
+<td>8</td>
+<td>57</td>
+<td>93</td>
+</tr>
+<tr class="even">
+<td><strong>Insulin Levels</strong></td>
+<td>Highest</td>
+<td>Slightly elevated</td>
+<td>Low</td>
+<td>Lowest</td>
+</tr>
+<tr class="odd">
+<td><strong>Glucose Levels</strong></td>
+<td>Slightly elevated</td>
+<td>Slightly higher</td>
+<td>Moderate</td>
+<td>Moderate</td>
+</tr>
+<tr class="even">
+<td><strong>BMI</strong></td>
+<td>Severe obesity, highest BMI</td>
+<td>Overweight, not as high as Group 1</td>
+<td>Normal BMI</td>
+<td>Normal BMI</td>
+</tr>
+<tr class="odd">
+<td><strong>Waist Circumference</strong></td>
+<td>Largest, abdominal obesity</td>
+<td>Elevated</td>
+<td>Smaller than Groups 1 and 2</td>
+<td>Smaller than Groups 1 and 2</td>
+</tr>
+<tr class="even">
+<td><strong>Albumin Levels</strong></td>
+<td>Slightly high</td>
+<td>Extremely elevated</td>
+<td>Moderate</td>
+<td>Moderate</td>
+</tr>
+<tr class="odd">
+<td><strong>Age</strong></td>
+<td>57</td>
+<td>68</td>
+<td>57</td>
+<td>65</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="distribution-of-drugs-used-in-each-group" class="slide level2">
+<h2>Distribution of drugs used in each group</h2>
+
+<img data-src="BCVIxRpharma_files/figure-revealjs/unnamed-chunk-13-1.png" width="960" class="r-stretch"></section>
+<section id="potential-benefit" class="slide level2">
+<h2>Potential benefit</h2>
+<p>It provides a valuable database for healthcare professionals, supporting informed decision-making, developing treatment strategies, and enhancing drug efficacy.</p>
+</section>
+<section id="highlighted-features-for-bcvi" class="slide level2">
+<h2>Highlighted Features for BCVI</h2>
+<div class="f80">
+<ul>
+<li class="fragment"><p><span class="red">Novel and unique concept:</span> BCVI allows users to specify their desired range for the final number of clusters.</p></li>
+<li class="fragment"><p><span class="red">Flexibility:</span> BCVI allows users to flexibly set parameters according to their needs and select any clustering algorithms and underlying CVIs of their choice.</p></li>
+</ul>
+</div>
+</section>
+<section id="drawbacks" class="slide level2">
+<h2>Drawbacks</h2>
+<div>
+<ul>
+<li class="fragment"><p>It relies on the quality of underlying indices.</p></li>
+<li class="fragment"><p>It is only effective when underlying indices are present, providing meaningful options for ranking local peaks for the final number of clusters.</p></li>
+</ul>
+</div>
+</section>
+<section id="explore-more" class="slide level2">
+<h2>Explore more</h2>
+<p><strong>Installation</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">install.packages</span>(<span class="st">"BayesCVI"</span>)</span>
+<span id="cb8-2"><a></a><span class="fu">library</span>(BayesCVI)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Function</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">help</span>(<span class="at">package =</span> <span class="st">"BayesCVI"</span>)</span>
+<span id="cb9-2"><a></a><span class="co"># Data in function </span></span>
+<span id="cb9-3"><a></a><span class="co"># B1_data - B7_data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="references" class="title-slide slide level1 center">
+<h1>References</h1>
+<ul>
+<li class="fragment"><a href="https://www.sciencedirect.com/science/article/abs/pii/S0167947324001373">O. Preedasawakul, and N. Wiroonsri, A Bayesian Cluster Validity Index, Computational Statistics &amp; Data Analysis, 202, 108053, 2025.</a></li>
+<li class="fragment"><a href="https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2013" class="uri">https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2013</a></li>
+<li class="fragment"><a href="https://www.who.int/health-topics/diabetes#tab=tab_1" class="uri">https://www.who.int/health-topics/diabetes#tab=tab_1</a></li>
+</ul>
+</section>
+
+<section>
+<section id="acknowledgement" class="title-slide slide level1 center">
+<h1>Acknowledgement</h1>
+<p><span class="f70">Nathakhun would like to also thank National Research Council of Thailand (NRCT), Grant number: N42A660991 (2023) for the project financial support.</span></p>
+</section>
+<section id="qa" class="slide level2 transition center center-align">
+<h2>Q&amp;A</h2>
+
+<div class="quarto-auto-generated-content">
+<div class="footer footer-default">
+<p>R/Pharma APAC 2024</p>
+</div>
+</div>
+</section></section>
+    </div>
+  </div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'zoom',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+
+    <script>
+
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
+      // slide changes (different for each slide format).
+
+      (function () {
+
+        // dispatch for htmlwidgets
+
+        function fireSlideEnter() {
+
+          const event = window.document.createEvent("Event");
+
+          event.initEvent("slideenter", true, true);
+
+          window.document.dispatchEvent(event);
+
+        }
+
+    
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+
+          fireSlideEnter();
+
+    
+
+          // dispatch for shiny
+
+          if (window.jQuery) {
+
+            if (previousSlide) {
+
+              window.jQuery(previousSlide).trigger("hidden");
+
+            }
+
+            if (currentSlide) {
+
+              window.jQuery(currentSlide).trigger("shown");
+
+            }
+
+          }
+
+        }
+
+    
+
+        // hookup for slidy
+
+        if (window.w3c_slidy) {
+
+          window.w3c_slidy.add_observer(function (slide_num) {
+
+            // slide_num starts at position 1
+
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
+          });
+
+        }
+
+    
+
+      })();
+
+    </script>
+
+    
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button', {
+        text: function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+      });
+      clipboard.on('success', function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      });
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>

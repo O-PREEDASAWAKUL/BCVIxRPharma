@@ -1,0 +1,247 @@
+[
+  {
+    "objectID": "BCVIxRpharma.html#section",
+    "href": "BCVIxRpharma.html#section",
+    "title": "{BayesCVI}",
+    "section": "",
+    "text": "Objective  Learn prescribed drugs patterns through clustering\nWhy it matters\n\n\nPersonalized medicine  \nRef: Figure 1\n\nDrug development  \nRef: Figure 2"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#what-we-will-cover-today",
+    "href": "BCVIxRpharma.html#what-we-will-cover-today",
+    "title": "{BayesCVI}",
+    "section": "What we will cover today",
+    "text": "What we will cover today\n\n\nBackground\nMotivation\nA Bayesian cluster validity index\nIntroduction to the BayesCVI package\nConclusion"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#public-health-issue",
+    "href": "BCVIxRpharma.html#public-health-issue",
+    "title": "{BayesCVI}",
+    "section": "Public health issue",
+    "text": "Public health issue\nDiabetes is a chronic, metabolic disease characterized by elevated levels of blood glucose (or blood sugar), which leads over time to serious damage to the heart, blood vessels, eyes, kidneys and nerves."
+  },
+  {
+    "objectID": "BCVIxRpharma.html#diabetes",
+    "href": "BCVIxRpharma.html#diabetes",
+    "title": "{BayesCVI}",
+    "section": "Diabetes",
+    "text": "Diabetes\n\n\nDiabetes is a global health crisis that has seen a dramatic rise in recent years. According to World Health Organization in 2021, it ranked among the top 10 causes of death worldwide, with a staggering 95% increase since 2000."
+  },
+  {
+    "objectID": "BCVIxRpharma.html#data-overview",
+    "href": "BCVIxRpharma.html#data-overview",
+    "title": "{BayesCVI}",
+    "section": "Data overview",
+    "text": "Data overview\nNational Health and Nutrition Examination Survey (NHANES) datasets from 2013-2014 Source: National Health and Nutrition Examination Survey\nInformation: 207 diabetes patients, including 15 variables.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nRXDDRUG\nRXDDAYS\nLBXIN\nLBXGH\nLBDLDL\nLBXTR\nLBDHDD\nLBXTC\nURXUMA\nBPXSY1\nBPXDI1\nBMXBMI\nBMXWAIST\nRIDAGEYR\nRIAGENDR\n\n\n\n\nINSULIN ASPART\n365\n5.83\n8.9\n56\n51\n60\n126\n11.9\n140\n90\n28.9\n109.2\n72\nMale\n\n\nGLIPIZIDE\n4745\n5.91\n6.0\n71\n108\n47\n140\n29.2\n138\n56\n24.8\n98.0\n63\nFemale\n\n\n\n\n\n Medications\n\n\n\n\n\n\n\nVariable\nDescription\n\n\n\n\nRXDDRUG\nGeneric drug name\n\n\nRXDDAYS\nFor how long have you been using or taking PRODUCT NAME?\n\n\n\n Laboratory results\n\n\n\nVariable\nDescription\n\n\n\n\nLBXIN\nInsulin (uU/mL)\n\n\nLBXGH\nGlycohemoglobin (%)\n\n\nLBXTR\nTriglyceride (mg/dL)\n\n\nLBDLDL\nLDL-cholesterol (mg/dL)\n\n\nLBDHDD\nDirect HDL-Cholesterol (mg/dL)\n\n\nLBXTC\nTotal Cholesterol (mg/dL)\n\n\nURXUMA\nAlbumin, urine (ug/mL)\n\n\n\n Medical examinations\n\n\n\nVariable\nDescription\n\n\n\n\nBPXSY1\nSystolic: Blood pressure (first reading) (mm Hg)\n\n\nBPXDI1\nDiastolic: Blood pressure (first reading) (mm Hg)\n\n\nBMXBMI\nBody Mass Index (kg/m²)\n\n\nBMXWAIST\nWaist Circumference (cm)\n\n\n\n\nDemographics\n\n\n\n\n\n\n\nVariable\nDescription\n\n\n\n\nRIDAGEYR\nAge in years of the participant at the time of screening\n\n\nRIAGENDR\nGender of the participant"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#classes-of-diabetic-drugs-in-this-data",
+    "href": "BCVIxRpharma.html#classes-of-diabetic-drugs-in-this-data",
+    "title": "{BayesCVI}",
+    "section": "Classes of diabetic drugs in this data",
+    "text": "Classes of diabetic drugs in this data"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#background",
+    "href": "BCVIxRpharma.html#background",
+    "title": "{BayesCVI}",
+    "section": "Background",
+    "text": "Background\nCluster analysis (CA) is an unsupervised learning tool in machine learning that is widely used in various areas.\n\nThe aim is to identify natural groupings within a dataset that are not initially apparent and without prior knowledge of the groups. \n\nRef: Figure"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#clustering-algorithms",
+    "href": "BCVIxRpharma.html#clustering-algorithms",
+    "title": "{BayesCVI}",
+    "section": "Clustering algorithms",
+    "text": "Clustering algorithms"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#determining-the-number-of-clusters",
+    "href": "BCVIxRpharma.html#determining-the-number-of-clusters",
+    "title": "{BayesCVI}",
+    "section": "Determining the number of clusters",
+    "text": "Determining the number of clusters\nElbow method"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#determining-the-number-of-clusters-1",
+    "href": "BCVIxRpharma.html#determining-the-number-of-clusters-1",
+    "title": "{BayesCVI}",
+    "section": "Determining the number of clusters",
+    "text": "Determining the number of clusters\nCluster Validity index (CVI)\n\n\n\nHard:\n\nDunn’s Index 1973\nCalinski-Harabasz 1974\nDavies-Bouldin’s index 1979\nPoint biserial correlation 1980\nSilhouette coefficient (Rousseeuw [1987], Sarle [1991])\nGeneralized Dunn index 1998\nPBM index 2004\nChou-Su-Lai index 2004\nDavies-Bouldin index 2005\nSTR index 2017\nWiroonsri index 2024\n\n\n\n\nSoft:\n\nXie–Beni (XB) index 1991\nPakhira–Bandyopadhyay–Maulik (PBM) index 2004\nTANG index 2005\nWu–Li (WL) index 2015\nGeneralized C index 2016\nKWON2 index 2021\nWiroonsri and Preedasawakul (WP) index"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#applying-cvi",
+    "href": "BCVIxRpharma.html#applying-cvi",
+    "title": "{BayesCVI}",
+    "section": "Applying CVI",
+    "text": "Applying CVI"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#cluster-the-data-into-8-groups",
+    "href": "BCVIxRpharma.html#cluster-the-data-into-8-groups",
+    "title": "{BayesCVI}",
+    "section": "Cluster the data into 8 groups",
+    "text": "Cluster the data into 8 groups\n\n\n\n\n\ncc\nRXDDAYS\nLBXIN\nLBXGH\nLBDLDL\nLBXTR\nLBDHDD\nLBXTC\nURXUMA\nBPXSY1\nBPXDI1\nBMXBMI\nBMXWAIST\nRIDAGEYR\n\n\n\n\n1\n4628.000\n6.753333\n7.466667\n94.66667\n143.33333\n49.33333\n172.6667\n3566.66667\n184.0000\n58.00000\n31.63333\n106.4667\n74.33333\n\n\n2\n1562.987\n23.088125\n7.451250\n112.56250\n140.73750\n50.15000\n190.9000\n18.96500\n126.1000\n71.17500\n31.89125\n108.4963\n59.82500\n\n\n3\n1748.379\n28.413448\n7.827586\n96.62069\n279.17241\n43.10345\n195.5172\n49.73448\n129.5172\n65.79310\n32.81724\n111.9759\n60.89655\n\n\n4\n3066.000\n27.914000\n7.320000\n85.40000\n106.60000\n44.40000\n151.2000\n1020.00000\n150.0000\n78.00000\n31.94000\n108.1600\n57.20000\n\n\n5\n2673.059\n33.377647\n7.858823\n85.94118\n111.05882\n47.52941\n155.6471\n298.79412\n139.7647\n68.00000\n33.63529\n111.5059\n64.29412\n\n\n6\n14.000\n129.340000\n11.600000\n72.00000\n175.00000\n33.00000\n140.0000\n7400.00000\n146.0000\n94.00000\n38.20000\n128.8000\n48.00000\n\n\n7\n1877.149\n15.616418\n7.246269\n76.35821\n79.41791\n52.70149\n144.9254\n20.36866\n126.0299\n64.71642\n30.14328\n105.2075\n61.53731\n\n\n8\n3139.000\n28.394000\n8.280000\n128.80000\n171.00000\n47.20000\n210.4000\n1924.80000\n160.8000\n66.80000\n33.38000\n114.2800\n65.40000"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#motivation",
+    "href": "BCVIxRpharma.html#motivation",
+    "title": "{BayesCVI}",
+    "section": "Motivation",
+    "text": "Motivation\nWhat if the optimal number is not what we are looking for?\n\n\n\n\n\nBrain MRI: tumor detection\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n   Ref: https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#bayesian-framework-and-cluster-validity-index",
+    "href": "BCVIxRpharma.html#bayesian-framework-and-cluster-validity-index",
+    "title": "{BayesCVI}",
+    "section": "Bayesian framework and cluster validity index",
+    "text": "Bayesian framework and cluster validity index\nIdea"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#bayesian-framework-and-cluster-validity-index-1",
+    "href": "BCVIxRpharma.html#bayesian-framework-and-cluster-validity-index-1",
+    "title": "{BayesCVI}",
+    "section": "Bayesian framework and cluster validity index",
+    "text": "Bayesian framework and cluster validity index\nTo be more precise…"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#notations",
+    "href": "BCVIxRpharma.html#notations",
+    "title": "{BayesCVI}",
+    "section": "Notations",
+    "text": "Notations\n\n\n\\({\\bf x} = (x_1,x_2,\\ldots,x_n)\\) denotes a dataset of size \\(n \\in \\mathbb{N}\\).\n\\(K \\in \\mathbb{N}\\) is the maximum number of clusters to be considered\n\\({\\bf p} = (p_2,p_3,\\ldots,p_K)\\), where \\(p_k\\), \\(k=2,3,\\ldots,K\\) represents the probability that the actual number of groups is \\(k\\)."
+  },
+  {
+    "objectID": "BCVIxRpharma.html#background-of-bcvi",
+    "href": "BCVIxRpharma.html#background-of-bcvi",
+    "title": "{BayesCVI}",
+    "section": "Background of BCVI",
+    "text": "Background of BCVI\nAssume that\n\n\\[\nf({\\bf x}|{\\bf p}) = C({\\bf p}) \\prod_{k=2}^Kp_k^{nr_k(x)}\n\\qquad(1)\\]\n\n\nrepresents the conditional probability density function of the dataset given \\({\\bf p}\\), where \\(C({\\bf p})\\) is the normalizing constant for the probability density function."
+  },
+  {
+    "objectID": "BCVIxRpharma.html#background-of-bcvi-1",
+    "href": "BCVIxRpharma.html#background-of-bcvi-1",
+    "title": "{BayesCVI}",
+    "section": "Background of BCVI",
+    "text": "Background of BCVI\nLet \\(r_k(\\bf x)\\) be a ratio adjusted from a CVI defined as\n\n\\[\nr_k(\\bf x) = \\begin{cases}\n            \\dfrac{GI(k)-\\min_j GI(j)}{\\sum_{i=2}^K (GI(i)-\\min_j GI(j))} \\text{  for Condition A, } \\\\\n            \\dfrac{\\max_j GI(j)- GI(k)}{\\sum_{i=2}^K (\\max_j GI(j) - GI(i))}  \\text{   for Condition B, } \\\\\n        \\end{cases}\n\\qquad(2)\\]\n\nwhere GI represents an arbitrary CVI. \n\nCondition A: The largest value of the GI indicates the optimal number of clusters.\nCondition B: The smallest value of the GI indicates the optimal number of clusters.\n\n\nIt is clear that \\(0\\le r_k(\\bf x) \\le 1\\)."
+  },
+  {
+    "objectID": "BCVIxRpharma.html#dirichlet-prior",
+    "href": "BCVIxRpharma.html#dirichlet-prior",
+    "title": "{BayesCVI}",
+    "section": "Dirichlet prior",
+    "text": "Dirichlet prior\nHere, we assume that \\({\\bf p}\\) follows a Dirichlet prior distribution with parameters \\({\\bf \\alpha} = (\\alpha_2,\\ldots,\\alpha_K)\\) with the probability density function\n\n\\[\n\\pi({\\bf p}) = \\frac{1}{B({\\bf \\alpha})} \\prod_{k=2}^K p_k^{\\alpha_k-1}.\n\\]\n\nReference: Dirichlet distribution"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#dirichlet-posterior",
+    "href": "BCVIxRpharma.html#dirichlet-posterior",
+    "title": "{BayesCVI}",
+    "section": "Dirichlet posterior",
+    "text": "Dirichlet posterior\n\nLet \\(K \\in \\mathbb{N}\\) and \\({\\bf r(x)} = (r_2({\\bf x}),\\ldots,r_K({\\bf x}))\\), where \\(r_k({\\bf x})\\) is defined as in (1). Assuming that \\({\\bf x}\\) follows the distribution described in (2), the posterior distribution of \\({\\bf p}\\) has the probability density function:\n\n\\[\n\\pi({\\bf p}|{\\bf x}) = \\frac{f({\\bf x , p})}{m({\\bf x})} = \\frac{1}{B({\\bf \\alpha} + n{\\bf r(x)})} \\prod_{k=2}^K p_k^{\\alpha_k+nr_k({\\bf x})-1}.\n\\] \nIn particular, it follows a Dirichlet distribution with parameters \\({\\bf \\alpha}+ n{\\bf r(x)}\\)."
+  },
+  {
+    "objectID": "BCVIxRpharma.html#definition-of-bcvi",
+    "href": "BCVIxRpharma.html#definition-of-bcvi",
+    "title": "{BayesCVI}",
+    "section": "Definition of BCVI",
+    "text": "Definition of BCVI\nFor \\(k = 2,3,\\ldots,K\\), the BCVI is then defined as\n\\[\n\\texttt{BCVI}(k) = E[p_k|{\\bf x}] = \\frac{\\alpha_k + nr_k({\\bf x})}{\\alpha_0+n}\n\\]\nwhere \\(\\alpha_0 = \\sum_{k=2}^K \\alpha_k\\)."
+  },
+  {
+    "objectID": "BCVIxRpharma.html#bayescvi",
+    "href": "BCVIxRpharma.html#bayescvi",
+    "title": "{BayesCVI}",
+    "section": "{BayesCVI}",
+    "text": "{BayesCVI}"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#bayescvi-1",
+    "href": "BCVIxRpharma.html#bayescvi-1",
+    "title": "{BayesCVI}",
+    "section": "BayesCVI",
+    "text": "BayesCVI\nThe BayesCVI package is an R package that allows users to apply the Bayesian Cluster Validity Index (BCVI) to their clustering results.\n\n\nThe package is compatible with K-means, fuzzy C means, EM clustering, and hierarchical clustering (single, average, and complete linkage).\nBCVI is compatible with any existing underlying CVIs"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#arguments-and-parameter-alpha",
+    "href": "BCVIxRpharma.html#arguments-and-parameter-alpha",
+    "title": "{BayesCVI}",
+    "section": "Arguments and parameter \\(\\alpha\\)",
+    "text": "Arguments and parameter \\(\\alpha\\)\nWiroonsri index (Hard)\n\n# method: \"kmeans\", \"hclust_complete\", \"hclust_average\", \"hclust_single\"\n# corr: \"pearson\", \"kendall\" or \"spearman\"\nB_Wvalid(x, kmax, method = \"kmeans\", corr = \"pearson\", nstart = 100,\n      sampling = 1, NCstart = TRUE, alpha = \"default\", mult.alpha = 1/2)\n\n\nThe default alpha value corresponds to the case where \\(\\alpha_k=1\\) for all k. This is used when users want the results to rely only on underlying CVIs.\n\n\nAlpha\n\n# Selecting each alpha between 0 to 30 is recommended. \n# If we consider k from 2 to 10\naalpha = c(25,25,25,25,25,5,5,5,5)"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#how-to-apply",
+    "href": "BCVIxRpharma.html#how-to-apply",
+    "title": "{BayesCVI}",
+    "section": "How to apply",
+    "text": "How to apply\n\n# Determine alpha based on our knowledge\n# Consider k from 2 to 10\naalpha = c(25,25,25,25,25,5,5,5,5)\nset.seed(50)\nB.WI = B_Wvalid(x = scale(clustdata), kmax = 10, method = \"kmeans\",\n                corr = \"pearson\",nstart = 10, sampling = 1, NCstart = TRUE,\n                alpha = aalpha, mult.alpha = 1/2)\nB.WI\n\n$BCVI\n   k       BCVI\n1  2 0.16458037\n2  3 0.15846049\n3  4 0.18115842\n4  5 0.15863418\n5  6 0.16133557\n6  7 0.03308408\n7  8 0.05575108\n8  9 0.03137009\n9 10 0.05562574\n\n$VAR\n   k          Var\n1  2 5.993133e-05\n2  3 5.812551e-05\n3  4 6.465910e-05\n4  5 5.817721e-05\n5  6 5.897794e-05\n6  7 1.394373e-05\n7  8 2.294621e-05\n8  9 1.324478e-05\n9 10 2.289766e-05\n\n$Index\n   k         NCI\n1  2  4.26091013\n2  3  0.06102601\n3  4 15.63792156\n4  5  0.18022009\n5  6  2.03410523\n6  7  0.13235949\n7  8 15.68803415\n8  9 -1.04389746\n9 10 15.60201492"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#visualize-the-result",
+    "href": "BCVIxRpharma.html#visualize-the-result",
+    "title": "{BayesCVI}",
+    "section": "Visualize the result",
+    "text": "Visualize the result\n\n# plot the BCVI\npplot = plot_BCVI(B.WI)\n\n\n\npplot$plot_index\n\n\n\n\n\n\n\npplot$plot_BCVI"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#cluster-the-data-into-4-groups",
+    "href": "BCVIxRpharma.html#cluster-the-data-into-4-groups",
+    "title": "{BayesCVI}",
+    "section": "Cluster the data into 4 groups",
+    "text": "Cluster the data into 4 groups\n\n\n\n\n\ncc\nRXDDAYS\nLBXIN\nLBXGH\nLBDLDL\nLBXTR\nLBDHDD\nLBXTC\nURXUMA\nBPXSY1\nBPXDI1\nBMXBMI\nBMXWAIST\nRIDAGEYR\n\n\n\n\n1\n1392.918\n47.38816\n7.669388\n90.00000\n167.8571\n43.48980\n167.0612\n99.62857\n126.4082\n70.61224\n40.59184\n128.7592\n57.67347\n\n\n2\n3516.625\n35.09375\n8.387500\n102.50000\n151.5000\n46.25000\n179.1250\n3250.50000\n167.5000\n62.75000\n33.40000\n113.0875\n67.75000\n\n\n3\n1598.439\n14.88439\n8.098246\n132.15789\n150.5789\n54.14035\n216.4912\n73.45965\n127.6491\n72.24561\n28.66140\n100.3474\n57.43860\n\n\n4\n2197.624\n13.59914\n6.986021\n75.78495\n113.3011\n50.03226\n148.4409\n76.93226\n130.1720\n64.58065\n28.64731\n102.1312\n64.62366"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#characteristic-comparison",
+    "href": "BCVIxRpharma.html#characteristic-comparison",
+    "title": "{BayesCVI}",
+    "section": "Characteristic comparison",
+    "text": "Characteristic comparison"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#characteristic-comparison-1",
+    "href": "BCVIxRpharma.html#characteristic-comparison-1",
+    "title": "{BayesCVI}",
+    "section": "Characteristic comparison",
+    "text": "Characteristic comparison\n\n\n\n\n\n\n\n\n\n\nCharacteristic\nGroup 1\nGroup 2\nGroup 3\nGroup 4\n\n\n\n\nNumber of Patients\n49\n8\n57\n93\n\n\nInsulin Levels\nHighest\nSlightly elevated\nLow\nLowest\n\n\nGlucose Levels\nSlightly elevated\nSlightly higher\nModerate\nModerate\n\n\nBMI\nSevere obesity, highest BMI\nOverweight, not as high as Group 1\nNormal BMI\nNormal BMI\n\n\nWaist Circumference\nLargest, abdominal obesity\nElevated\nSmaller than Groups 1 and 2\nSmaller than Groups 1 and 2\n\n\nAlbumin Levels\nSlightly high\nExtremely elevated\nModerate\nModerate\n\n\nAge\n57\n68\n57\n65"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#distribution-of-drugs-used-in-each-group",
+    "href": "BCVIxRpharma.html#distribution-of-drugs-used-in-each-group",
+    "title": "{BayesCVI}",
+    "section": "Distribution of drugs used in each group",
+    "text": "Distribution of drugs used in each group"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#potential-benefit",
+    "href": "BCVIxRpharma.html#potential-benefit",
+    "title": "{BayesCVI}",
+    "section": "Potential benefit",
+    "text": "Potential benefit\nIt provides a valuable database for healthcare professionals, supporting informed decision-making, developing treatment strategies, and enhancing drug efficacy."
+  },
+  {
+    "objectID": "BCVIxRpharma.html#highlighted-features-for-bcvi",
+    "href": "BCVIxRpharma.html#highlighted-features-for-bcvi",
+    "title": "{BayesCVI}",
+    "section": "Highlighted Features for BCVI",
+    "text": "Highlighted Features for BCVI\n\n\nNovel and unique concept: BCVI allows users to specify their desired range for the final number of clusters.\nFlexibility: BCVI allows users to flexibly set parameters according to their needs and select any clustering algorithms and underlying CVIs of their choice."
+  },
+  {
+    "objectID": "BCVIxRpharma.html#drawbacks",
+    "href": "BCVIxRpharma.html#drawbacks",
+    "title": "{BayesCVI}",
+    "section": "Drawbacks",
+    "text": "Drawbacks\n\n\nIt relies on the quality of underlying indices.\nIt is only effective when underlying indices are present, providing meaningful options for ranking local peaks for the final number of clusters."
+  },
+  {
+    "objectID": "BCVIxRpharma.html#explore-more",
+    "href": "BCVIxRpharma.html#explore-more",
+    "title": "{BayesCVI}",
+    "section": "Explore more",
+    "text": "Explore more\nInstallation\n\ninstall.packages(\"BayesCVI\")\nlibrary(BayesCVI)\n\nFunction\n\nhelp(package = \"BayesCVI\")\n# Data in function \n# B1_data - B7_data"
+  },
+  {
+    "objectID": "BCVIxRpharma.html#qa",
+    "href": "BCVIxRpharma.html#qa",
+    "title": "{BayesCVI}",
+    "section": "Q&A",
+    "text": "Q&A\n\n\n\nR/Pharma APAC 2024"
+  }
+]
